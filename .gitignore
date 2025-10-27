@@ -4,3 +4,5 @@ solution
 .vscode
 *-solutions
 *-private
+test/**/*full.test.ts
+test/**/*local.test.ts
