@@ -21,6 +21,7 @@ export class Name {
     /** Expects that all Name components are properly masked */
     // @methodtype initialization-method
     constructor(other: string[], delimiter?: string) {
+        
         if (delimiter !== undefined && delimiter !== null) {
             this.delimiter = delimiter;
         } else {
@@ -71,24 +72,26 @@ export class Name {
      */
     // @methodtype conversion-method
     public asDataString(): string {
-        var result = "";
+        let result = "";
 
-        for (var i = 0; i < this.components.length; i++) {
-            var c = this.components[i];
-            var escaped = "";
+        for (let i = 0; i < this.components.length; i++) {
+            const c = this.components[i];
+            let escaped = "";
 
-            for (var j = 0; j < c.length; j++) {
-                var ch = c.charAt(j);
-                if (ch === DEFAULT_DELIMITER || ch === ESCAPE_CHARACTER) {
-                    escaped = escaped + ESCAPE_CHARACTER;
+            for (let j = 0; j < c.length; j++) {
+                const ch = c.charAt(j);
+
+                // Escape ONLY escape character + THIS INSTANCE'S delimiter
+                if (ch === this.delimiter || ch === ESCAPE_CHARACTER) {
+                    escaped += ESCAPE_CHARACTER;
                 }
-                escaped = escaped + ch;
+                escaped += ch;
             }
 
-            result = result + escaped;
+            result += escaped;
 
             if (i < this.components.length - 1) {
-                result = result + DEFAULT_DELIMITER;
+                result += this.delimiter;   // use instance delimiter
             }
         }
 
