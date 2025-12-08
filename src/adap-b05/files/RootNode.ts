@@ -1,6 +1,9 @@
 import { Name } from "../names/Name";
 import { StringName } from "../names/StringName";
 import { Directory } from "./Directory";
+import { ServiceFailureException } from "../common/ServiceFailureException";
+import { Exception } from "../common/Exception";
+import { Node } from "./Node";
 
 export class RootNode extends Directory {
 
@@ -19,7 +22,12 @@ export class RootNode extends Directory {
     }
 
     public getFullName(): Name {
-        return new StringName("", '/');
+        try {
+            return new StringName("", '/');
+        } catch (ex) {
+            const e = ex as Exception;
+            throw new ServiceFailureException("service failed", e);
+        }
     }
 
     public move(to: Directory): void {
@@ -28,6 +36,15 @@ export class RootNode extends Directory {
 
     protected doSetBaseName(bn: string): void {
         // null operation
+    }
+
+    public findNodes(bn: string): Set<Node> {
+        try {
+            return super.findNodes(bn);
+        } catch (ex) {
+            const e = ex as Exception;
+            throw new ServiceFailureException("service failed", e);
+        }
     }
 
 }

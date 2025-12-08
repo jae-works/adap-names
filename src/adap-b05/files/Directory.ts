@@ -1,4 +1,5 @@
 import { Node } from "./Node";
+import { InvalidStateException } from "../common/InvalidStateException";
 
 export class Directory extends Node {
 
@@ -17,7 +18,21 @@ export class Directory extends Node {
     }
 
     public removeChildNode(cn: Node): void {
-        this.childNodes.delete(cn); // Yikes! Should have been called remove
+        this.childNodes.delete(cn);
+    }
+
+    public findNodes(bn: string): Set<Node> {
+        const result = super.findNodes(bn);
+
+        for (const child of this.childNodes) {
+            InvalidStateException.assert(child.getBaseName() !== "");
+            const childMatches = child.findNodes(bn);
+            for (const n of childMatches) {
+                result.add(n);
+            }
+        }
+
+        return result;
     }
 
 }
